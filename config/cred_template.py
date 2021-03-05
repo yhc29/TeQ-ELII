@@ -1,0 +1,5 @@
+USERNAME = "yourusername"
+PASSWORD = "yourpwd"
+HOST = "0.0.0.0"
+PORT = "portnum"
+DB_NAME = "db_name"
