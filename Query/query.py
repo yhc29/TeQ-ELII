@@ -12,9 +12,9 @@ __email__ = "yan.huang@uth.tmc.edu"
 __status__ = "development"
 
 class QueryClient:
-  def __init__(self,url,db_name):
+  def __init__(self,url,db_tlii_name):
     self.__mongo_client = pymongo.MongoClient(url)
-    self.db = self.__mongo_client[db_name]
+    self.db_tlii = self.__mongo_client[db_tlii_name]
 
 
   def get_value_set(self,col_name=None,concept=None,value=None,freq=False):
@@ -25,7 +25,7 @@ class QueryClient:
       stmt["col_name"] = col_name
     if concept:
       stmt["concept"] = concept
-    docs = self.db["corpus"].find(stmt,{"value": 1, 'num_of_records': 1, "_id": 0})
+    docs = self.db_tlii["corpus"].find(stmt,{"value": 1, 'num_of_records': 1, "_id": 0})
     if freq:
       result = [ (doc["value"],doc['num_of_records']) for doc in docs ]
     else:
@@ -50,7 +50,7 @@ class QueryClient:
           }
         }
       ]
-      docs = self.db[col_name+"_tii"].aggregate(ap_stmt,allowDiskUse=True)
+      docs = self.db_tlii[col_name+"_tii"].aggregate(ap_stmt,allowDiskUse=True)
       for doc in docs:
         result+=doc["ptid_list"]
       
@@ -120,7 +120,7 @@ class QueryClient:
           }
         }
       ]
-      docs = self.db[col_name+"_tii"].aggregate(ap_stmt,allowDiskUse=True)
+      docs = self.db_tlii[col_name+"_tii"].aggregate(ap_stmt,allowDiskUse=True)
       for doc in docs:
         result += doc["ptid_list"]
       docs.close()
@@ -209,7 +209,7 @@ class QueryClient:
             "record_id_list": {group_operator:"$record_id_list" } }
           }
         ]
-      docs = self.db[col_name+"_pt_timeline"].aggregate(ap_stmt,allowDiskUse=True)
+      docs = self.db_tlii[col_name+"_pt_timeline"].aggregate(ap_stmt,allowDiskUse=True)
       if return_type == "first":
         for doc in docs:
           try:
